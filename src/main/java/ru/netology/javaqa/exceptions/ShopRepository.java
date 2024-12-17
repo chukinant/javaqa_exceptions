@@ -5,22 +5,29 @@ public class ShopRepository {
 
     /**
      * Вспомогательный метод для имитации добавления элемента в массив
+     *
      * @param current — массив, в который мы хотим добавить элемент
      * @param product — элемент, который мы хотим добавить
      * @return — возвращает новый массив, который выглядит, как тот, что мы передали,
      * но с добавлением нового элемента в конец
      */
-    private Product[] addToArray(Product[] current, Product product) {
-        Product[] tmp = new Product[current.length + 1];
-        for (int i = 0; i < current.length; i++) {
-            tmp[i] = current[i];
+    protected Product[] addToArray(Product[] current, Product product) {
+        Product productToAdd = findById(product.id);
+        if (productToAdd == null) {
+            Product[] tmp = new Product[current.length + 1];
+            for (int i = 0; i < current.length; i++) {
+                tmp[i] = current[i];
+            }
+            tmp[tmp.length - 1] = product;
+            return tmp;
+        } else {
+            throw new AlreadyExistsException("Item with ID" + product.id + " already exists");
         }
-        tmp[tmp.length - 1] = product;
-        return tmp;
     }
 
     /**
      * Метод добавления товара в репозиторий
+     *
      * @param product — добавляемый товар
      */
     public void add(Product product) {
@@ -44,14 +51,13 @@ public class ShopRepository {
                 }
             }
             products = tmp;
-        }
-        else {throw new NotFoundException("ID " + id + " не найден");
+        } else {
+            throw new NotFoundException("ID " + id + " не найден");
         }
     }
 
     public Product findById(int id) {
-        for (Product product : products)
-            {
+        for (Product product : products) {
             if (product.getId() == id) {
                 return product;
             }

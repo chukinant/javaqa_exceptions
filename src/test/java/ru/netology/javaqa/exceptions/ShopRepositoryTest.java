@@ -42,4 +42,39 @@ class ShopRepositoryTest {
             products.removeById(14);
         });
     }
+
+    @Test
+    void shouldAdd() {
+
+        Product product1 = new Product(11, "Cheese", 1000);
+        Product product2 = new Product(12, "Bread", 100);
+        Product product3 = new Product(15, "Butter", 600);
+
+        ShopRepository products = new ShopRepository();
+        products.add(product1);
+        products.add(product2);
+        products.add(product3);
+
+        Product[] expected = {product1, product2, product3};
+        Product[] actual = products.findAll();
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    void shouldGenerateAlreadyExistsException() {
+
+        Product product1 = new Product(11, "Cheese", 1000);
+        Product product2 = new Product(12, "Bread", 100);
+        Product product3 = new Product(15, "Butter", 600);
+
+        ShopRepository products = new ShopRepository();
+        products.add(product1);
+        products.add(product2);
+        products.add(product3);
+
+        Assertions.assertThrows(AlreadyExistsException.class, () -> {
+            products.addToArray(products.findAll(), product3);
+        });
+    }
+
 }
